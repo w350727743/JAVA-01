@@ -17,9 +17,10 @@ public class MyClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        FileInputStream fis = null;
         try {
-            FileInputStream fileInputStream = new FileInputStream("C:\\GitRepository\\demo1\\src\\main\\java\\com\\example\\demo1\\test\\Hello.xlass");
-            byte[] bytes = IOUtils.toByteArray(fileInputStream);
+            fis = new FileInputStream("C:\\GitRepository\\demo1\\src\\main\\java\\com\\example\\demo1\\test\\Hello.xlass");
+            byte[] bytes = IOUtils.toByteArray(fis);
             for (int i = 0; i < bytes.length; i++) {
                 bytes[i] = (byte) ((byte) 255 - bytes[i]);
             }
@@ -28,8 +29,14 @@ public class MyClassLoader extends ClassLoader {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return super.findClass(name);
+        return super.loadClass(name);
 
     }
 
